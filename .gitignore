@@ -1,2 +1,5 @@
 *.vim
 *.vim.old
+
+autoload/*
+plugin/*
