@@ -9,8 +9,6 @@
 -- set options
 local opts = { noremap = true, silent = true }
 
-local term_opts = { silent = true }
-
 -- set terminal options
 local term_opts = { silent = true }
 
