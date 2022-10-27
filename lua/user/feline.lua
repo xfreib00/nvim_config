@@ -8,30 +8,9 @@ local force_inactive = {
   bufnames = {}
 }
 
---local winbar_components = {
---  active = {{}, {}, {}},
---  inactive = {{}, {}, {}},
---}
-
 local components = {
-  active = {{}, {}, {}},
-  inactive = {{}, {}, {}},
-}
-
-local gruvbox = {
-  bg = '#282828',
-  black = '#282828',
-  yellow = '#d8a657',
-  cyan = '#89b482',
-  oceanblue = '#45707a',
-  green = '#a9b665',
-  orange = '#e78a4e',
-  violet = '#d3869b',
-  magenta = '#c14a4a',
-  white = '#a89984',
-  fg = '#a89984',
-  skyblue = '#7daea3',
-  red = '#ea6962',
+  active = {{}, {}},
+  inactive = {{}, {}, {}, {}},
 }
 
 local catppuccin = {
@@ -50,52 +29,20 @@ local catppuccin = {
   red = '#f38ba8',
 }
 
-local onedarkpro = {
-  bg = "#282c34",
-  black = "#282c34",
-  yellow = "#e5c07b",
-  cyan = "#56b6c2",
-  oceanblue = "#61afef",
-  green = "#98c379",
-  orange = "#d19a66",
-  violet = "#c678dd",
-  magenta = "#c678dd",
-  white = "#abb2bf",
-  fg = "#abb2bf",
-  skyblue = "#61afef",
-  red = "#e06c75",
-}
-
-local tokyonightstorm = {
-  bg = "#24283b",
-  black = "#24283b",
-  yellow = "#e0af68",
-  cyan = "#7dcfff",
-  oceanblue = "#7aa2f7",
-  green = "#9ece6a",
-  orange = "#e0af68",
-  violet = "#bb9af7",
-  magenta = "#bb9af7",
-  white = "#c0caf5",
-  fg = "#c0caf5",
-  skyblue = "#7dcfff",
-  red = "#f7768e",
-}
-
 local vi_mode_colors = {
-  NORMAL = 'green',
-  OP = 'green',
-  INSERT = 'red',
+  NORMAL = 'skyblue',
+  OP = 'red',
+  INSERT = 'green',
   CONFIRM = 'red',
-  VISUAL = 'skyblue',
-  LINES = 'skyblue',
-  BLOCK = 'skyblue',
+  VISUAL = 'violet',
+  LINES = 'violet',
+  BLOCK = 'violet',
   REPLACE = 'violet',
   ['V-REPLACE'] = 'violet',
   ENTER = 'cyan',
   MORE = 'cyan',
   SELECT = 'orange',
-  COMMAND = 'green',
+  COMMAND = 'red',
   SHELL = 'green',
   TERM = 'green',
   NONE = 'yellow'
@@ -153,7 +100,9 @@ force_inactive.buftypes = {
 
 -- vi-mode
 components.active[1][1] = {
-  provider = ' NV-IDE ',
+  provider = function()
+    return vi_mode_utils.get_vim_mode()
+  end,
   hl = function()
     local val = {}
 
@@ -163,24 +112,11 @@ components.active[1][1] = {
 
     return val
   end,
-  right_sep = 'right_filled'
-}
--- vi-symbol
-components.active[1][2] = {
-  provider = function()
-    return vi_mode_text[vi_mode_utils.get_vim_mode()]
-  end,
-  hl = function()
-    local val = {}
-    val.fg = vi_mode_utils.get_mode_color()
-    val.bg = 'bg'
-    val.style = 'bold'
-    return val
-  end,
-  right_sep = ' '
+  right_sep = 'right_filled',
+  left_sep = 'block'
 }
 -- filename
-components.active[1][3] = {
+components.active[1][2] = {
   provider = function()
     return vim.fn.expand("%:F")
   end,
@@ -188,9 +124,12 @@ components.active[1][3] = {
     fg = 'white',
     bg = 'bg',
     style = 'bold'
-  }
+  },
+  right_sep = ' ',
+  left_sep = ' '
 }
--- MID
+
+-- RIGHT
 
 -- gitBranch
 components.active[2][1] = {
@@ -229,10 +168,8 @@ components.active[2][4] = {
   },
 }
 
--- RIGHT
-
 -- fileIcon
-components.active[3][1] = {
+components.active[2][5] = {
   provider = function()
     local filename = vim.fn.expand('%:t')
     local extension = vim.fn.expand('%:e')
@@ -256,10 +193,11 @@ components.active[3][1] = {
     val.style = 'bold'
     return val
   end,
+  left_sep =  ' ',
   right_sep = ' '
 }
 -- fileType
-components.active[3][2] = {
+components.active[2][6] = {
   provider = 'file_type',
   hl = function()
     local val = {}
@@ -278,7 +216,7 @@ components.active[3][2] = {
   right_sep = ' '
 }
 -- fileSize
-components.active[3][3] = {
+components.active[2][7] = {
   provider = 'file_size',
   enabled = function() return vim.fn.getfsize(vim.fn.expand('%:t')) > 0 end,
   hl = {
@@ -289,7 +227,7 @@ components.active[3][3] = {
   right_sep = ' '
 }
 -- fileFormat
-components.active[3][4] = {
+components.active[2][8] = {
   provider = function() return '' .. vim.bo.fileformat:upper() .. '' end,
   hl = {
     fg = 'white',
@@ -299,7 +237,7 @@ components.active[3][4] = {
   right_sep = ' '
 }
 -- fileEncode
-components.active[3][5] = {
+components.active[2][9] = {
   provider = 'file_encoding',
   hl = {
     fg = 'white',
@@ -308,7 +246,7 @@ components.active[3][5] = {
   },
   right_sep = ' '
 }
-components.active[3][6] = {
+components.active[2][10] = {
   provider = 'position',
   hl = {
     fg = 'white',
@@ -318,7 +256,7 @@ components.active[3][6] = {
   right_sep = ' '
 }
 -- linePercent
-components.active[3][7] = {
+components.active[2][11] = {
   provider = 'line_percentage',
   hl = {
     fg = 'white',
@@ -328,7 +266,7 @@ components.active[3][7] = {
   right_sep = ' '
 }
 -- scrollBar
-components.active[3][8] = {
+components.active[2][12] = {
   provider = 'scroll_bar',
   hl = {
     fg = 'yellow',
@@ -366,7 +304,7 @@ components.inactive[1][1] = {
 }
 
 require('feline').setup({
-  theme = gruvbox,
+  theme = catppuccin,
   default_bg = bg,
   default_fg = fg,
   vi_mode_colors = vi_mode_colors,
