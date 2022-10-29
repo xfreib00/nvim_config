@@ -1,11 +1,16 @@
 local lsp = require('feline.providers.lsp')
 local vi_mode_utils = require('feline.providers.vi_mode')
---local gps = require("nvim-gps")
+local navic = require("nvim-navic")
 
 local force_inactive = {
   filetypes = {},
   buftypes = {},
   bufnames = {}
+}
+
+local winbar_components = {
+  active = {{}, {}, {}},
+  inactive = {{}, {}, {}},
 }
 
 local components = {
@@ -274,6 +279,70 @@ components.active[2][12] = {
   },
 }
 
+-- WINBAR
+
+-- LEFT
+
+-- nvimGps
+winbar_components.active[1][1] = {
+  provider = function() return navic.get_location() end,
+  enabled = function() return navic.is_available() end,
+  hl = {
+    fg = 'orange',
+    style = 'bold'
+  }
+}
+
+-- MID
+
+-- RIGHT
+
+-- LspName
+winbar_components.active[3][1] = {
+  provider = 'lsp_client_names',
+  hl = {
+    fg = 'yellow',
+    style = 'bold'
+  },
+  right_sep = ' '
+}
+-- diagnosticErrors
+winbar_components.active[3][2] = {
+  provider = 'diagnostic_errors',
+  enabled = function() return lsp.diagnostics_exist(vim.diagnostic.severity.ERROR) end,
+  hl = {
+    fg = 'red',
+    style = 'bold'
+  }
+}
+-- diagnosticWarn
+winbar_components.active[3][3] = {
+  provider = 'diagnostic_warnings',
+  enabled = function() return lsp.diagnostics_exist(vim.diagnostic.severity.WARN) end,
+  hl = {
+    fg = 'yellow',
+    style = 'bold'
+  }
+}
+-- diagnosticHint
+winbar_components.active[3][4] = {
+  provider = 'diagnostic_hints',
+  enabled = function() return lsp.diagnostics_exist(vim.diagnostic.severity.HINT) end,
+  hl = {
+    fg = 'cyan',
+    style = 'bold'
+  }
+}
+-- diagnosticInfo
+winbar_components.active[3][5] = {
+  provider = 'diagnostic_info',
+  enabled = function() return lsp.diagnostics_exist(vim.diagnostic.severity.INFO) end,
+  hl = {
+    fg = 'skyblue',
+    style = 'bold'
+  }
+}
+
 -- INACTIVE
 
 -- fileType
@@ -309,5 +378,10 @@ require('feline').setup({
   default_fg = fg,
   vi_mode_colors = vi_mode_colors,
   components = components,
+  force_inactive = force_inactive,
+})
+
+require('feline').winbar.setup({
+  components = winbar_components,
   force_inactive = force_inactive,
 })

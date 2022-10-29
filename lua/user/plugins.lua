@@ -57,7 +57,7 @@ return packer.startup(function(use)
     use "saadparwaiz1/cmp_luasnip" -- snippet completions
     use "hrsh7th/cmp-nvim-lsp" -- LSP
     use "hrsh7th/cmp-nvim-lua" -- LUA LSP
-
+    use { "SmiteshP/nvim-navic", requires = "neovim/nvim-lspconfig" }
     -- LSP 
     use "neovim/nvim-lspconfig" -- enable lsp
     use "williamboman/nvim-lsp-installer" -- language server installer
